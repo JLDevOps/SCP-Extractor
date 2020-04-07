@@ -13,7 +13,7 @@ After installing Python 3.x, you can download the necessary python packages via
 ## Usage
 To run the extraction script, do the following:
 
-1. To scan an image, you can run:
+1. Run the extract.py script:
     ```shell
     python extract.py
     ```
