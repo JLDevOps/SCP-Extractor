@@ -1,20 +1,28 @@
 import re
 
-# Following template format
-# **Item #:** SCP-XXXX
-# **Object Class:** Safe/Euclid/Keter (indicate which class)
-# **Special Containment Procedures:** [Paragraphs explaining the procedures]
-# **Description:** [Paragraphs explaining the description]
-# **Addendum:** [Optional additional paragraphs]
-# ** Document**
-
 class SCP:
     def __init__(self, num, wiki):
         self.num = num
         self.wiki = wiki
+        self.data = (wiki.text.replace('\n','  ')).replace('\r','  ')
     
+    def __repr__(self):
+        return '''{}
+        Title: {}
+        Class: {}
+        Containment Procedures: {}
+        Description: {}
+        Addendum: {}
+        Document: {}
+        Breach Overview: {}
+        Link: {}
+        '''.format(self.id, self.title, self.object_class,
+                    self.containment_procedures, self.description, 
+                    self.addendums, self.documents, self.containment_breach_overview, 
+                    self.link)
+
     @property
-    def item_num(self):
+    def id(self):
         return 'SCP-' + str(self.num)
     
     @property
@@ -30,63 +38,50 @@ class SCP:
 
     @property
     def object_class(self):
-        class_re = r'(Object Class: )(.*\n)'
+        class_re = r'(Object Class: )(.*?)(\n| \(| )'
         class_compile = re.compile(class_re)
         ob_class = re.search(class_compile, self.wiki.text)
         try:
-            return str(ob_class.group(2)).replace('\n', '')
+            return str(ob_class.group(2))
         except:
             return None
     
     @property
     def containment_procedures(self):
-        data = self.wiki.text.replace('\n','  ')
-        data = data.replace('\r','  ')
-
-        containment_proc_re = r'Special Containment Procedures:'
-        containment_proc_re_description = r'(Special Containment Procedures: )(.*?)(  Description: |«)'
-
-        containment_proc_regex = re.compile(containment_proc_re)
-        description_regex = re.compile(description_re_no_filter)
-        containment_proc_desc_compile = re.compile(containment_proc_re_description)
-
-        if (containment_proc_regex.search(data)):
-            procedures = re.search(containment_proc_desc_compile, data)
+        containment_proc_re = r'(Special Containment Procedures: )(.*?)(«|Description:|Acquisition Log|Containment breach overview: )'
+        containment_proc_compile = re.compile(containment_proc_re)
+        try:
+            procedures = re.search(containment_proc_compile, self.data)
             return str(procedures.group(2))
-        else:
+        except:
             return None
 
     @property
     def description(self):
-        data = self.wiki.text.replace('\n','  ')
-        data = data.replace('\r','  ')
-
-        description_re_search = r'Description:'
-        description_re_ad = r'(Description: )(.*?)(Addendum)(.*)(:)'
-        description_re_doc = r'(Description: )(.*?)(Document)(.*)(:)'
-        description_re_no_filter = r'(Description: )(.*?)(«)'
-        addendum_re = r'(Addendum)(.*)(:)'
-        document_re = r'(Document)(.*)(:)'
-
-        description_search_compile = re.compile(description_re_search)
-        description_ad_compile = re.compile(description_re_ad)
-        description_doc_compile = re.compile(description_re_doc)
-        description_re_no_filter_compile = re.compile(description_re_no_filter)
-        addendum_compile = re.compile(addendum_re)
-        document_compile = re.compile(document_re)
-
-        if (description_search_compile.search(data)):
-            if(addendum_compile.search(data)):
-                description = re.search(description_ad_compile, data)
-                return str(description.group(2))
-            elif (document_compile.search(data)):
-                description = re.search(description_doc_compile,data)
-                return str(description.group(2))
-            else:
-                description = re.search(description_re_no_filter_compile,data)
-                return str(description.group(2))
-        else:
+        description_re = r'(Description: )(.*?)(«|Acquisition Log|Containment breach|Document(.*)(:)|Addendum(.*)(:))'
+        description_compile = re.compile(description_re)
+        try:
+            description = re.search(description_compile, self.data)
+            return str(description.group(2))
+        except:
             return None
-
     
-
+    @property
+    def addendums(self):
+        # TODO Return a list of addendum (addenum number, addendum info)
+        return None
+    
+    @property
+    def documents(self):
+        # TODO Return a list of documents (document number, document info)
+        return None
+    
+    @property
+    def containment_breach_overview(self):
+        breach_re = r'(Containment breach overview: )(.*?)(«|Document(.*)(:)|Addendum(.*)(:))'
+        breach_compile = re.compile(breach_re)
+        try:
+            breach = re.search(breach_compile, self.data)
+            return str(breach.group(2))
+        except:
+            return None
