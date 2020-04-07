@@ -47,7 +47,11 @@ class SCP:
         title_re = r': (.*)'
         title_compile = re.compile(title_re)
         title_group = re.search(title_compile, self.wiki.title)
-        return str(title_group.group(1))
+        try:
+            return str(title_group.group(1))
+        except:
+            return None
+        
 
     @property
     def object_class(self):
