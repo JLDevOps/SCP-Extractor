@@ -210,12 +210,11 @@ class SnapshotCreator:
     metadata is saved.
     """
 
-    def __init__(self, dbpath):
+    def __init__(self, dbpath, new_run):
         """Create an instance."""
-        # if pathlib.Path(dbpath).exists():
-        #     # raise FileExistsError(dbpath)
-        #     print('Found Duplicate')
-        #     os.remove(dbpath)
+        if new_run:
+            os.remove(dbpath)
+            print('Found Duplicate DB: New Flag is On -- Deleted DB')
             
         orm.connect(dbpath)
         self.pool = concurrent.futures.ThreadPoolExecutor(max_workers=20)
@@ -223,7 +222,6 @@ class SnapshotCreator:
     def take_snapshot(self, wiki, forums=False):
         """Take new snapshot."""
         self.wiki = wiki
-        print(self.wiki)
         self._save_all_pages()
         if forums:
             self._save_forums()
@@ -236,7 +234,6 @@ class SnapshotCreator:
 
     def _save_all_pages(self):
         """Iterate over the site pages, call _save_page for each."""
-        print(self.wiki)
         orm.create_tables(
             'Page', 'Revision', 'Vote', 'ForumPost',
             'PageTag', 'ForumThread', 'User', 'Tag')
