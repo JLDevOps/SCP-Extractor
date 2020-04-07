@@ -20,6 +20,19 @@ class SCP:
                     self.containment_procedures, self.description, 
                     self.addendums, self.documents, self.containment_breach_overview, 
                     self.link)
+    
+    def __iter__(self):
+        return iter([
+            self.num,
+            self.title,
+            self.object_class,
+            self.containment_procedures,
+            self.description,
+            self.addendums,
+            self.documents,
+            self.containment_breach_overview,
+            self.link
+        ])
 
     @property
     def id(self):
