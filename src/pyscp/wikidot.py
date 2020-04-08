@@ -48,7 +48,7 @@ class InsistentRequest(requests.Session):
         log.debug('%s: %s %s', method, url, logged_kwargs)
 
         kwargs.setdefault('timeout', 60)
-        kwargs.setdefault('allow_redirects', False)
+        kwargs.setdefault('allow_redirects', True)
         for _ in range(self.max_attempts):
             try:
                 resp = super().request(method=method, url=url, **kwargs)

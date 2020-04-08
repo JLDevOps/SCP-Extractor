@@ -24,6 +24,7 @@ class SCP:
     def __iter__(self):
         return iter([
             self.num,
+            self.id,
             self.title,
             self.object_class,
             self.containment_procedures,
@@ -55,7 +56,7 @@ class SCP:
 
     @property
     def object_class(self):
-        class_re = r'(Object Class: )(.*?)(\n| \(| )'
+        class_re = r'(Object Class: )(.*?)(-|\n| \(| )'
         class_compile = re.compile(class_re)
         ob_class = re.search(class_compile, self.wiki.text)
         try:

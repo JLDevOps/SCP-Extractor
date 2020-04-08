@@ -26,7 +26,7 @@ def get_scp_info(wiki_url=None, scp_id=None):
     scp_data = scp.item.SCP(num=scp_id, wiki=p)
     return scp_data
 
-def extract_scp_information(wiki_url='www.scp-wiki.net', file='scp.csv', first=1, last=1000):
+def extract_scp_information(wiki_url='www.scp-wiki.net', file='scp.csv', first=1, last=6000):
     # Loop through all SCPs
     with open(file, 'a', newline='', encoding='utf-8') as csv_file:
         csv_writer = csv.writer(csv_file)
@@ -40,8 +40,10 @@ def extract_scp_information(wiki_url='www.scp-wiki.net', file='scp.csv', first=1
             csv_file.flush()
  
 def main():
+    # TODO Add Argument Parsing
+
     create_csv()
-    extract_scp_information(first=1, last=5000)
+    extract_scp_information(first=1, last=6000)
 
 
 if __name__ == "__main__":
