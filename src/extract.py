@@ -3,6 +3,7 @@ import re
 import scp
 import csv
 import os
+import argparse
 
 def create_csv(file='scp.csv'):
     header = ['ID', 'Item', 'Title', 'Class', 'Containment Procedures', 'Description', 'Addendum', 'Document', 'Breach Overview', 'Link']
@@ -40,11 +41,18 @@ def extract_scp_information(wiki_url='www.scp-wiki.net', file='scp.csv', first=1
             csv_file.flush()
  
 def main():
-    # TODO Add Argument Parsing
+    parser = argparse.ArgumentParser(description='SCP Extraction (into a csv or print)')
+    parser.add_argument('-f', '--first', help='Starting at which SCP number', required=False)
+    parser.add_argument('-l', '--last', help='Last SCP number', required=False)
+    parser.add_argument('-c', '--csv', help='Exports a csv file from the results', required=False)
 
-    create_csv()
-    extract_scp_information(first=1, last=6000)
+    args = vars(parser.parse_args())
+    first_num = int(args['first']) if args['first'] else None
+    last_num = int(args['last']) if args['last'] else None
+    csv_name = args['csv'] if args['csv'] else 'scp.csv'
 
+    create_csv(file=csv_name)
+    extract_scp_information(file=csv_name, first=first_num, last=last_num)
 
 if __name__ == "__main__":
     main()
