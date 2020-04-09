@@ -4,7 +4,10 @@ class SCP:
     def __init__(self, num, wiki):
         self.num = num
         self.wiki = wiki
-        self.data = (wiki.text.replace('\n','  ')).replace('\r','  ')
+        if wiki.text:
+            self.data = (wiki.text.replace('\n','  ')).replace('\r','  ')
+        else:
+            self.data = None
     
     def __repr__(self):
         return '''{}
@@ -47,8 +50,8 @@ class SCP:
     def title(self):
         title_re = r': (.*)'
         title_compile = re.compile(title_re)
-        title_group = re.search(title_compile, self.wiki.title)
         try:
+            title_group = re.search(title_compile, self.wiki.title)
             return str(title_group.group(1))
         except:
             return None
@@ -58,8 +61,8 @@ class SCP:
     def object_class(self):
         class_re = r'(Object Class: )(.*?)(-|\n| \(| )'
         class_compile = re.compile(class_re)
-        ob_class = re.search(class_compile, self.wiki.text)
         try:
+            ob_class = re.search(class_compile, self.wiki.text)
             return str(ob_class.group(2))
         except:
             return None

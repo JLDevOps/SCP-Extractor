@@ -64,8 +64,9 @@ class InsistentRequest(requests.Session):
                     'Redirect attempted with url: {}'.format(url))
             elif 400 <= resp.status_code < 600:
                 continue
-        raise requests.ConnectionError(
-            'Max retries exceeded with url: {}'.format(url))
+        return None
+        # raise requests.ConnectionError(
+        #     'Max retries exceeded with url: {}'.format(url))
 
     def get(self, url, **kwargs):
         return self.request('GET', url, **kwargs)
@@ -124,12 +125,15 @@ class Page(pyscp.core.Page):
 
     @pyscp.utils.cached_property
     def _pdata(self):
-        data = self._wiki.req.get(self.url).text
-        soup = bs4.BeautifulSoup(data, 'lxml')
-        return (int(re.search('pageId = ([0-9]+);', data).group(1)),
-                parse_element_id(soup.find(id='discuss-button')),
-                str(soup.find(id='main-content')),
-                {e.text for e in soup.select('.page-tags a')})
+        try:
+            data = self._wiki.req.get(self.url).text
+            soup = bs4.BeautifulSoup(data, 'lxml')
+            return (int(re.search('pageId = ([0-9]+);', data).group(1)),
+                    parse_element_id(soup.find(id='discuss-button')),
+                    str(soup.find(id='main-content')),
+                    {e.text for e in soup.select('.page-tags a')})
+        except Exception as e:
+            return None
 
     @property
     def _raw_title(self):
@@ -149,7 +153,10 @@ class Page(pyscp.core.Page):
 
     @property
     def html(self):
-        return self._pdata[2]
+        if self._pdata:
+            return self._pdata[2]
+        else:
+            return None
 
     @pyscp.utils.cached_property
     @pyscp.utils.listify()

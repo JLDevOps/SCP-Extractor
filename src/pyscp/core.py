@@ -179,7 +179,10 @@ class Page(metaclass=abc.ABCMeta):
     @property
     def text(self):
         """Plain text of the page."""
-        return self._soup.find(id='page-content').text
+        try:
+            return self._soup.find(id='page-content').text
+        except Exception as e:
+            return None
 
     @property
     def wordcount(self):

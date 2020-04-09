@@ -22,9 +22,16 @@ def download_snapshot(wiki_url=None, db_path=None, forums=False, new_run=False):
         return False
 
 def get_scp_info(wiki_url=None, scp_id=None):
-    wiki = pyscp.wikidot.Wiki(wiki_url)
-    p = wiki('scp-'+ str(scp_id))
-    scp_data = scp.item.SCP(num=scp_id, wiki=p)
+    try:
+        wiki = pyscp.wikidot.Wiki(wiki_url)
+        p = wiki('scp-'+ str(scp_id))
+    except:
+        p = None
+    
+    if wiki:
+        scp_data = scp.item.SCP(num=scp_id, wiki=p)
+    else:
+        scp_data = scp.item.SCP(num=scp_id, wiki=p)
     return scp_data
 
 def extract_scp_information(wiki_url='www.scp-wiki.net', file='scp.csv', first=1, last=6000):
