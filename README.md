@@ -7,7 +7,7 @@ You will need to have Python 3.x installed.
 
 After installing Python 3.x, you can download the necessary python packages via
 ```bash
-    pip install -r requirements.txtr
+    pip install -r requirements.txt
 ```
 
 ## Usage
