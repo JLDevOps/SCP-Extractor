@@ -21,9 +21,8 @@ def download_snapshot(wiki_url=None, db_path=None, forums=False, new_run=False):
     except Exception as e:
         return False
 
-def get_scp_info(wiki_url=None, scp_id=None):
+def get_scp_info(wiki_url=None, scp_id=None, wiki=None):
     try:
-        wiki = pyscp.wikidot.Wiki(wiki_url)
         p = wiki('scp-'+ str(scp_id))
     except:
         p = None
@@ -36,6 +35,7 @@ def get_scp_info(wiki_url=None, scp_id=None):
 
 def extract_scp_information(wiki_url='www.scp-wiki.net', file='scp.csv', first=1, last=6000):
     # Loop through all SCPs
+    wiki = pyscp.wikidot.Wiki(wiki_url)
     with open(file, 'a', newline='', encoding='utf-8') as csv_file:
         csv_writer = csv.writer(csv_file)
         for i in range(first, last):
@@ -43,7 +43,7 @@ def extract_scp_information(wiki_url='www.scp-wiki.net', file='scp.csv', first=1
             num_digits = len(str(i))
             if num_digits == 1 or num_digits == 2:
                 scp_num = f'{i:03}'
-            scp_data = get_scp_info(wiki_url=wiki_url, scp_id=scp_num)
+            scp_data = get_scp_info(wiki_url=wiki_url, scp_id=scp_num, wiki=wiki)
             csv_writer.writerow(list(scp_data))
             csv_file.flush()
  
