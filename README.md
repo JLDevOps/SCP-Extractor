@@ -18,9 +18,14 @@ To run the extraction script, do the following:
     python extract.py
     ```
 
-2. Run with a starting number and last number with a csv file
+2. Run with a starting number and last number to a csv file
     ```shell
     python extract.py -f 1 -l 10 -c scp.csv
+    ```
+
+3. Run with a starting number and last number to a txt file
+    ```shell
+    python extract.py -f 1 -l 10 -t scp.txt
     ```
 
 Note: You may have to update the script to extract more SCP information.
