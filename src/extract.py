@@ -33,6 +33,16 @@ def get_scp_info(wiki_url=None, scp_id=None, wiki=None):
         scp_data = scp.item.SCP(num=scp_id, wiki=p)
     return scp_data
 
+def extract_to_output(wiki_url='www.scp-wiki.net', first=1, last=6000):
+    wiki = pyscp.wikidot.Wiki(wiki_url)
+    for i in range(first, last):
+        scp_num = i
+        num_digits = len(str(i))
+        if num_digits == 1 or num_digits == 2:
+            scp_num = f'{i:03}'
+        scp_data = get_scp_info(wiki_url=wiki_url, scp_id=scp_num, wiki=wiki)
+        print(scp_data)
+
 def extract_to_csv(wiki_url='www.scp-wiki.net', file='scp.csv', first=1, last=6000):
     # Loop through all SCPs
     wiki = pyscp.wikidot.Wiki(wiki_url)
@@ -79,7 +89,12 @@ def extract_to_raw_txt(wiki_url='www.scp-wiki.net', file='scp.txt', first=1, las
             except:
                 scp_description = ''
             
-            scp_text = scp_title + scp_class + scp_containment + scp_description
+            try:
+                scp_addendum = 'Addendum: ' + scp_data.addendums + '\n'
+            except:
+                scp_addendum = ''
+            
+            scp_text = scp_title + scp_class + scp_containment + scp_description + scp_addendum
             txt_file.write(scp_text)
             txt_file.writelines('<end-scp>\n')
  
@@ -99,9 +114,10 @@ def main():
     if csv_name:
         create_csv(file=csv_name)
         extract_to_csv(file=csv_name, first=first_num, last=last_num)
-    
-    if txt_name:
+    elif txt_name:
         extract_to_raw_txt(file=txt_name, first=first_num, last=last_num)
-
+    else:
+        extract_to_output(first=first_num, last=last_num)
+    
 if __name__ == "__main__":
     main()

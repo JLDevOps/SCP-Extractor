@@ -88,7 +88,13 @@ class SCP:
     
     @property
     def addendums(self):
-        # TODO Return a list of addendum (addenum number, addendum info)
+        addendums_re = r'(Addendum [0-9]{1,3}-[0-9]{1,3}:|Addendum [0-9]{1,3}:|Addendum \d:|Addendum :|Addendum:)(.*?)(«)'
+        addendums_compile = re.compile(addendums_re)
+        try:
+            addendums = re.search(addendums_compile, self.data)
+            return str(addendums.group(2))
+        except:
+            return None
         return None
     
     @property
