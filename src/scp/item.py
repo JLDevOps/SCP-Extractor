@@ -55,7 +55,6 @@ class SCP:
             return str(title_group.group(1))
         except:
             return None
-        
 
     @property
     def object_class(self):
